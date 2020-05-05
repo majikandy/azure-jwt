@@ -14,7 +14,7 @@ A simple JWT validator for Microsoft Azure Id tokens.
 """
 
 [dependencies]
-jsonwebtoken = "5.0.1"
+jsonwebtoken = "7.1.0"
 reqwest = "0.9.14"
 serde = {version="1.0.90", features=["derive"]}
 chrono = "0.4.6"

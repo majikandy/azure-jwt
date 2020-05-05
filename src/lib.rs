@@ -107,6 +107,7 @@
 use base64;
 use chrono::{Duration, Local, NaiveDateTime};
 use jsonwebtoken as jwt;
+use jsonwebtoken::DecodingKey;
 use reqwest::{self, Response};
 use serde::{Deserialize, Serialize};
 #[cfg(target_os = "windows")] 
@@ -210,7 +211,7 @@ impl AzureAuth {
 
         // exp, nbf, iat is set to validate as default
         validator.leeway = 60;
-        validator.set_audience(&self.aud_to_val);
+        validator.set_audience(&[self.aud_to_val.clone()]);
         let decoded: Token<AzureJwtClaims> = self.validate_token_authenticity(token, &validator)?;
 
         Ok(decoded)
@@ -307,7 +308,7 @@ impl AzureAuth {
         let auth_key_bytes = auth_key.get_public_key()?;
         //let key_as_bytes = from_base64_to_bytearray(&auth_key)?;
 
-        let valid: Token<T> = jwt::decode(token, &auth_key_bytes, &validator)?;
+        let valid: Token<T> = jwt::decode(token, &DecodingKey::from_rsa_der(&auth_key_bytes), &validator)?;
 
         Ok(valid)
     }
